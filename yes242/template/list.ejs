@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <ul>
+    <li onclick="showProducts('BestSeller','1')">종합</li>
+    <li onclick="showProducts()">실시간</li>
+    <li onclick="showProducts()">일별</li>
+    <li onclick="showProducts()">월별/주별</li>
+    <li onclick="showProducts()">특가</li>
+    <li onclick="showProducts()">스테디셀러</li>
+  </ul>
+
+  <div id="list">
+    <!-- 동적생성 -->
+  </div>
+
+  <script>
+    function showProducts(category, page) {
+      const url = `/${category}/${page}`
+      fetch(url)
+      .then(response => response.json())//json()은 Response 스트림을 가져와 스트림이 완료될때까지 읽는다. 그리고 다 읽은 body의 텍스트를 Promise형태로 반환한다.
+      .then(bestSellerList => {
+        const output = `
+          <h2>${bestSellerList.title}</h2>
+          ${bestSellerList.list.map((list, idx) => `
+            <div>
+              <div id="index">${idx + 1}</div>
+              <img src="${list.img}">
+              <div id="info">
+                <span id="title">[도서]${list.bname}</span>
+                <span id="comment">${list.bnameComment}</span>
+                <p>${list.price}원</p>
+              </div>
+            </div>
+          `)}
+        `
+        document.querySelector('#list').innerHTML = output;
+      })
+      .catch()
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ul style="width: 900px; margin: 30px auto; border: 1px solid gray; list-style: none; display: flex; text-align: center; padding: 0;">
+    <li onclick="bestSellerCategory('BestSeller','1')" style="width: 16.66%; height: 40px; display: inline-block; line-height: 40px; border: 1px solid gray; text-decoration: none; color: gray; cursor: pointer;">종합</li>
+    <li onclick="bestSellerCategory('RealTimeBestSeller','1')" style="width: 16.66%; height: 40px; display: inline-block; line-height: 40px; border: 1px solid gray; text-decoration: none; color: gray; cursor: pointer;">실시간</li>
+    <li onclick="bestSellerCategory('DayBestSeller','1')" style="width: 16.66%; height: 40px; display: inline-block; line-height: 40px; border: 1px solid gray; text-decoration: none; color: gray; cursor: pointer;">일별</li>
+    <li onclick="bestSellerCategory('MonthWeekBestSeller','1')" style="width: 16.66%; height: 40px; display: inline-block; line-height: 40px; border: 1px solid gray; text-decoration: none; color: gray; cursor: pointer;">월별/주별</li>
+    <li onclick="bestSellerCategory('HotPriceBestSeller','1')" style="width: 16.66%; height: 40px; display: inline-block; line-height: 40px; border: 1px solid gray; text-decoration: none; color: gray; cursor: pointer;">특가</li>
+    <li onclick="bestSellerCategory('SteadySeller','1')" style="width: 16.66%; height: 40px; display: inline-block; line-height: 40px; border: 1px solid gray; text-decoration: none; color: gray; cursor: pointer;">스테디셀러</li>
+  </ul>
+
+  <section id="list" style="width: 900px; margin: 0 auto; margin-top: 50px;">
+    <!-- 동적 생성 -->
+  </section>
+
+  <script>
+    function bestSellerCategory(categoryName,page) {
+      const url = `/${categoryName}/${page}`
+      fetch(url)
+      .then(response => response.json())//json()은 Response 스트림을 가져와 스트림이 완료될때까지 읽는다. 그리고 다 읽은 body의 텍스트를 Promise형태로 반환한다.
+      .then(bestSellerList => {  
+        const output = `
+          <h2>${bestSellerList.title}</h2>
+          ${bestSellerList.list.map((book, idx) => `
+          <div style="display: flex; border-bottom:1px solid gray; height:250px; align-items:center;">
+            <span style="font-size:25px; margin: 0 10px; height:100%; line-height:250px;">${idx + 1}</span>
+            <img style="height:80%; margin-right: 15px;" src="${book.img}">
+            <div>
+              <span style="font-weight:bold;">[도서] ${book.bname}</span>
+              <span style="font-size:12px;">${book.bnameComment}</span>
+              <p>${book.price}원</p>
+            </div>
+          </div>
+        `)}`;
+        document.querySelector('#list').innerHTML = output;
+      })
+      .catch()
+    }
+  </script>
+</body>
+</html>

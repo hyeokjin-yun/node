@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p>댓글</p>
+  <hr>
+  <div id="replyForm" style="text-align: right;">
+    <textarea name="replyContent" id="replyContent" cols="80" rows="2"></textarea>
+    <button type="button" id="btnRegReply" onclick="regReply('<%= newsContent.nid %>')">댓글 작성</button>
+  </div>
+
+  <ul id="replyList"></ul>
+
+  <script>
+    replyList('<%= newsContent.nid %>');
+
+    function replyList(nid) { //맨 처음 호출되는 리스트 출력 함수
+      //get 방식으로 nid 값 넘긴 후 json 타입으로 리스트 가져오기
+      fetch(`/reply/${nid}`)
+      .then(response => response.json())
+      .then(rlist => {
+        const output =`${rlist.map(reply => `
+          <li style="list-style: none; border: 1px solid gray; padding: 10px 5px; margin: 10px 0; display:flex; justify-content: space-between;">${reply.content}<button>삭제</button></li>
+          `).join('\n')}`;
+        document.querySelector('#replyList').innerHTML = output;
+      })
+      .catch()
+    }
+
+    function regReply(nid) {
+      const replyContent = document.querySelector('#replyContent').value;
+      fetch('/reply', {
+        method : 'post',
+        headers : {'content-type' : 'application/json'},
+        body : JSON.stringify({nid: nid, content : replyContent})
+      })
+      .then(response => {
+        if(response.status === 201) {
+          window.location.reload(); //reply 재호출 -> replyList 함수 실행
+        }
+      })
+      .catch()
+    }
+  </script>
+</body>
+</html>

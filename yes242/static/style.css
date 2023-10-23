@@ -1,0 +1,51 @@
+ul{
+  display: flex;
+  list-style: none;
+  width: 800px;
+  padding: 0;
+  margin: 40px auto;
+}
+
+li{
+  text-align: center;
+  width: 16.66%;
+  height: 40px;
+  line-height: 40px;
+  border: 1px solid gray;
+}
+
+#list {
+  width: 800px;
+  margin: 0 auto;
+}
+
+#list > div{
+  display: flex;
+  height: 150px;
+  border-bottom: 1px solid gray;
+}
+
+#list > div #index {
+  margin: 0 18px;
+  line-height: 150px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#list > div img {
+  height: 80%;
+  margin-right: 20px;
+}
+
+#list > div #info #title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#list > div #info #comment {
+  font-size: 8px;
+}
+
+#list > div #info p {
+  font-weight: bold;
+}

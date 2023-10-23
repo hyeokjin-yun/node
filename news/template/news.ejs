@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div style="width: 600px; margin: 30px auto; border: 1px solid gray; padding: 20px 10px;">
+    <h2 style="width: 100%; margin: 0;"><%= newsContent.title %></h2>
+    <p style="width: 100%; border-bottom: 1px solid gray; padding-bottom: 30px; margin: 0; font-size: .8em;">입력: <%= newsContent.rdate %></p>
+    <img src="<%= newsContent.url %>" alt="" style="width: 80%; display: block;margin: 20px auto;">
+    <p style="width: 90%; margin: 0 auto;"><%= newsContent.content %></p>
+    <p style="text-align: right;">
+      <a href="/news"><button type="button">이전 페이지</button></a>
+      <button type="button" onclick="remove('<%= newsContent.nid %>')">삭제</button>
+    </p>
+      <%- include('reply.ejs') %>
+  </div>
+
+  <script>
+    function remove(nid) {
+      fetch('/news', 
+      {
+        method : 'delete',
+        headers : {'Content-Type' : 'application/json'},
+        body : JSON.stringify({nid : nid})
+      }
+      )
+      .then(res => {
+        if(res.status === 204) {
+          alert('글을 삭제했습니다')
+          window.location.href = 'http://localhost:8080/news';
+        }
+      })
+      .catch(console.error);
+    }
+  </script>
+</body>
+</html> 

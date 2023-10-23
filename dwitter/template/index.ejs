@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dwitter</title>
+</head>
+<body>
+  <main style="width: 30%; margin: 0 auto;">
+    <h1>Dwitter</h1>
+    <ul>
+      <li><a href="/dwitter">All Dwitter</a></li>
+      <li><a href="#">My Dwitter</a></li>
+      <li><a href="#">Login</a></li>
+    </ul>
+    
+    <form name="contentForm" action="/dwitter" method="post" style="border: 2px solid gray;">
+      <input type="text" name="id" placeholder="id">
+      <input type="text" name="name" placeholder="name">
+      <input type="text" name="content" placeholder="content" style="width: 90%;">
+      <button type="submit">Post</button>
+    </form>
+    
+      <% for(i=0; i<list.length; i++){ %>
+    <div style="border: 1px solid gray; margin-top: 10px; width: 100%;">
+      <span style="float: right;cursor: pointer;" onclick="remove('<%= list[i].id %>')">삭제</span>
+      <span style="float: right; cursor: pointer;" onclick="updateToggle('<%= list[i].id %>')">편집&nbsp;&nbsp;</span>
+      <img style="clear: both; width: 80px;" src="https://item.kakaocdn.net/do/1401e813472967e3b572fee1ee192eb89f17e489affba0627eb1eb39695f93dd" alt="">
+      <span>[<%= list[i].name %>]</span>
+      <span><a href="/dwitter/<%= list[i].id%>">@<%= list[i].id %></a></span>
+      <span><%= list[i].date %></span>
+      <div>
+        <%= list[i].content %>
+      </div>
+      <div id="updateForm_<%= list[i].id %>" style="display: none;">
+        <input type="text" id="content_<%= list[i].id %>" style="width: 80%;">
+        <button type="button" onclick="update('<%= list[i].id %>')">Update</button>
+      </div>
+    </div>
+    <% } %>
+
+    <script>
+      function updateToggle(id) {
+        const updateForm = document.querySelector(`#updateForm_${id}`);
+        const contentText = document.querySelector(`#content_${id}`);
+
+        const display = updateForm.style.display;
+        if(display === 'none'){
+          updateForm.style.display = 'block';
+          contentText.focus();
+        }else{
+          updateForm.style.display = 'none';
+          contentText.value="";
+        }
+      }
+
+      function update(id) {
+          const updateText = document.querySelector(`#content_${id}`).value;
+          fetch('/dwitter',
+            {
+              method : 'put',
+              headers : {'content-type' : 'application/json'},
+              body : JSON.stringify({id : id, content : updateText})
+            }
+          )
+          .then((result) => {
+            if(result.status === 204) {
+              window.location.reload();
+            }
+          })
+          .catch(console.error)
+        }
+
+        function remove(id) {
+          fetch('/dwitter',
+            {
+              method : 'delete',
+              headers : {'content-type' : 'application/json'},
+              body : JSON.stringify({id : id})
+            }
+          )
+          .then((result) => {
+            if(result.status === 204) {
+              window.location.reload();
+            }
+          })
+          .catch(console.error)
+        }
+    </script>
+  </main>
+</body>
+</html>
